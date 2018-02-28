@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { Button } from 'react-bootstrap';
 import SignUpForm from './components/SignUpForm';
 import LoginForm from './components/LoginForm';
+import LandingPage from './components/LandingPage';
 // import 'bootstrap/dist/css/bootstrap-theme.css';
 import './App.css';
 
@@ -20,6 +21,7 @@ class App extends PureComponent {
         ...prevState,
         signup: true,
         registered: false,
+        loginSucceed: false,
       };
     });
   }
@@ -30,23 +32,30 @@ class App extends PureComponent {
         ...prevState,
         signup: false,
         registered: true,
+        loginSucceed: true,
       };
     });
   }
 
   render() {
+    const { signup, registered, loginSucceed } = this.state;
     return (
       <div className="App">
         <h2>Welcom to Simedtrieste</h2>
         {
-          this.state.signup === true ? <SignUpForm onLoginRequest={this.onLoginRequest} /> : <LoginForm />
+          signup === true ?
+            <SignUpForm onLoginRequest={this.onLoginRequest} /> :
+            <LoginForm onLogin={this.onLoginRequest} />
         }
         {
-          !this.state.signup && !this.state.registered &&
+          !signup && !registered && !loginSucceed &&
           <div>
             <p>You do not have an account?</p>
             <Button bsStyle="link" onClick={this.onSignUpHandler}>Sign Up</Button>
           </div>
+        }
+        {
+          loginSucceed && <LandingPage />
         }
       </div>
     );

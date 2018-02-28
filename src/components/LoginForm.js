@@ -1,15 +1,14 @@
 import React, { PureComponent, Fragment } from 'react';
 import { Button, Checkbox, Form, FormGroup, Col, FormControl, ControlLabel } from 'react-bootstrap';
+import { func } from 'prop-types';
 
 class LoginForm extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      form: 'ABC',
-    };
+  static propTypes = {
+    onLogin: func.isRequired,
   }
+
   render() {
-    console.log('state', this.state.form);
+    const { onLogin } = this.props;
     return (
       <Fragment>
         <Form horizontal>
@@ -21,9 +20,17 @@ class LoginForm extends PureComponent {
               <FormControl type="text" placeholder="Enter your user name" />
             </Col>
           </FormGroup>
+          <FormGroup controlId="simedtriestePassword">
+            <Col componentClass={ControlLabel} smOffset={2} sm={2}>
+              Password
+            </Col>
+            <Col sm={4}>
+              <FormControl type="password" />
+            </Col>
+          </FormGroup>
+          <Checkbox>Remember me?</Checkbox>
         </Form>
-
-        <Button>Login</Button>
+        <Button onClick={onLogin}>Login</Button>
       </Fragment>
     );
   }
