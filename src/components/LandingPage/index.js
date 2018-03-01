@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import CSVReader from 'react-csv-reader';
 import { withRouter } from 'react-router';
-import { Jumbotron, Table, Col } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { Jumbotron, Table, Col, Button } from 'react-bootstrap';
 import { head, slice, map, upperCase } from 'lodash';
 import uuid from 'uuid';
 import Styles from './LandingPage.css';
@@ -63,6 +64,7 @@ class LandingPage extends PureComponent {
   render() {
     return (
       <div>
+        <Link to="/">Logout</Link>
         <Jumbotron bsStyle={Styles.landingpage}>
           <Col smOffset={2} sm={8}>
             <CSVReader
