@@ -1,5 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Button, Checkbox, Form, FormGroup, Col, ControlLabel } from 'react-bootstrap';
+import { Button, Form, FormGroup, Col, ControlLabel } from 'react-bootstrap';
 import { func, bool, object } from 'prop-types';
 import { withRouter } from 'react-router';
 import { reduxForm, Field } from 'redux-form';

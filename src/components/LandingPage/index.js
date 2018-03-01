@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import CSVReader from 'react-csv-reader';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
-import { Jumbotron, Table, Col, Button } from 'react-bootstrap';
+import { Jumbotron, Table, Col } from 'react-bootstrap';
 import { head, slice, map, upperCase } from 'lodash';
 import uuid from 'uuid';
 import Styles from './LandingPage.css';

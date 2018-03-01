@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { object } from 'prop-types';
 import { map } from 'lodash';
 import { Button } from 'react-bootstrap';
 import { withRouter } from 'react-router';
@@ -7,9 +6,6 @@ import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
 
 class Authentication extends PureComponent {
-  static propTypes = {
-    history: object.isRequired,
-  };
   constructor(props) {
     super(props);
     this.state = {
@@ -108,11 +104,8 @@ class Authentication extends PureComponent {
 
   render() {
     const {
-      signup, registered, loginSucceed, error, match, history, location,
+      signup, registered, loginSucceed, error,
     } = this.state;
-    console.log('history', history);
-    console.log('match', match);
-    console.log('location', location);
     return (
       <div className="App">
         <h2>Welcome to Simedtrieste</h2>
