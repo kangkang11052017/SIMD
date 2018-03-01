@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import CSVReader from 'react-csv-reader';
+import { withRouter } from 'react-router';
 import { Jumbotron, Table, Col } from 'react-bootstrap';
 import { head, slice, map, upperCase } from 'lodash';
 import uuid from 'uuid';
@@ -77,4 +78,4 @@ class LandingPage extends PureComponent {
   }
 }
 
-export default LandingPage;
+export default withRouter(LandingPage);

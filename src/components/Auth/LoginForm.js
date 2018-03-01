@@ -1,6 +1,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import { Button, Checkbox, Form, FormGroup, Col, ControlLabel } from 'react-bootstrap';
-import { func } from 'prop-types';
+import { func, bool, object } from 'prop-types';
+import { withRouter } from 'react-router';
 import { reduxForm, Field } from 'redux-form';
 import InputField from './InputField';
 
@@ -8,11 +9,18 @@ class LoginForm extends PureComponent {
   static propTypes = {
     onLogin: func.isRequired,
     handleSubmit: func.isRequired,
+    logged: bool.isRequired,
+    history: object.isRequired,
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.logged) {
+      this.props.history.push('/landingpage');
+    }
   }
 
   render() {
     const { handleSubmit, onLogin } = this.props;
-    console.log('this.props', this.props);
     return (
       <Fragment>
         <Form horizontal>
@@ -50,7 +58,7 @@ class LoginForm extends PureComponent {
   }
 }
 
-export default reduxForm({
+export default withRouter(reduxForm({
   form: 'LOGIN',
-})(LoginForm);
+})(LoginForm));
 
