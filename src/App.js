@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import store from './store';
 import Authentication from './components/Auth';
 import LandingPage from './components/LandingPage/';
+import { URL } from './constants';
 import './App.css';
 
 const appStore = createStore(store);
@@ -15,8 +16,8 @@ const App = () => {
     <Provider store={appStore}>
       <Router>
         <div className="App">
-          <Route exact path="/" component={Authentication} />
-          <Route path="/landingpage" component={LandingPage} />
+          <Route exact path={URL.HOME} component={Authentication} />
+          <Route path={URL.LANDING} component={LandingPage} />
         </div>
       </Router>
     </Provider>

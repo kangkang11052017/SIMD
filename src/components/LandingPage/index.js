@@ -6,6 +6,7 @@ import { Jumbotron, Table, Col } from 'react-bootstrap';
 import { head, slice, map, upperCase } from 'lodash';
 import uuid from 'uuid';
 import Styles from './LandingPage.css';
+import { URL } from '../../constants';
 
 class LandingPage extends PureComponent {
   constructor(props) {
@@ -64,7 +65,7 @@ class LandingPage extends PureComponent {
   render() {
     return (
       <div>
-        <Link to="/">Logout</Link>
+        <Link to={URL.HOME}>Logout</Link>
         <Jumbotron bsStyle={Styles.landingpage}>
           <Col smOffset={2} sm={8}>
             <CSVReader

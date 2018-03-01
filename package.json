@@ -1,6 +1,7 @@
 {
-  "name": "catalyst-simd-core-spa-ui",
-  "version": "0.1.0",
+  "name": "SIMD",
+  "homepage": "https://kangkang11052017.github.io/SIMD",
+  "version": "0.0.1",
   "private": true,
   "dependencies": {
     "babel-eslint": "^8.2.2",
@@ -11,6 +12,7 @@
     "eslint-plugin-import": "^2.9.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.7.0",
+    "gh-pages": "^1.1.0",
     "immutable": "^3.8.2",
     "key-mirror": "^1.0.1",
     "lodash": "^4.17.5",
@@ -33,6 +35,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "yarn run build",
+    "deploy": "gh-pages -d build"
   }
 }

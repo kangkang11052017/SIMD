@@ -4,6 +4,7 @@ import { func, bool, object } from 'prop-types';
 import { withRouter } from 'react-router';
 import { reduxForm, Field } from 'redux-form';
 import InputField from './InputField';
+import { URL } from '../../constants';
 
 class LoginForm extends PureComponent {
   static propTypes = {
@@ -15,7 +16,7 @@ class LoginForm extends PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.logged) {
-      this.props.history.push('/landingpage');
+      this.props.history.push(URL.LANDING);
     }
   }
 
