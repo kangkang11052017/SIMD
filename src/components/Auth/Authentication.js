@@ -1,19 +1,10 @@
 import React, { PureComponent } from 'react';
-import 'bootstrap/dist/css/bootstrap.css';
-import { Button } from 'react-bootstrap';
+import { func, object } from 'prop-types';
 import { map } from 'lodash';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { createStore } from 'redux';
-import { Provider } from 'react-redux';
-import { SignUpForm, LoginForm } from './components/Auth';
-import LandingPage from './components/LandingPage/';
-import store from './store';
-// import 'bootstrap/dist/css/bootstrap-theme.css';
-import './App.css';
+import LoginForm from './LoginForm';
+import SignUpForm from './SignUpForm';
 
-const appStore = createStore(store);
-
-class App extends PureComponent {
+class Authentication extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -115,33 +106,29 @@ class App extends PureComponent {
       signup, registered, loginSucceed, error,
     } = this.state;
     return (
-      <Provider store={appStore}>
-        <Router>
-          <div className="App">
-            <h2>Welcome to Simedtrieste</h2>
-            {
-              signup === true ?
-                <SignUpForm onSignUp={this.onSignUpRequest} getUser={this.onGetUserInfo} /> :
-                <LoginForm onLogin={this.onLoginRequest} getUser={this.onGetUserInfo} />
-            }
-            {
-              !signup && !registered && !loginSucceed &&
-              <div>
-                <p>Not registered yet ? Register Now</p>
-                <Button bsStyle="link" onClick={this.signUp}>Sign Up</Button>
-              </div>
-            }
-            {
-              error && <strong className="error">{error}</strong>
-            }
-            {
-              loginSucceed && registered && <LandingPage />
-            }
+      <div className="App">
+        <h2>Welcome to Simedtrieste</h2>
+        {
+          signup === true ?
+            <SignUpForm onSignUp={this.onSignUpRequest} getUser={this.onGetUserInfo} /> :
+            <LoginForm onLogin={this.onLoginRequest} getUser={this.onGetUserInfo} />
+        }
+        {
+          !signup && !registered && !loginSucceed &&
+          <div>
+            <p>Not registered yet ? Register Now</p>
+            <Button bsStyle="link" onClick={this.signUp}>Sign Up</Button>
           </div>
-        </Router>
-      </Provider>
+        }
+        {
+          error && <strong className="error">{error}</strong>
+        }
+        {
+          loginSucceed && registered && <LandingPage />
+        }
+      </div>
     );
   }
 }
 
-export default App;
+export default Authentication;

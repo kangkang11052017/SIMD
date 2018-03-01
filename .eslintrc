@@ -34,6 +34,7 @@
     "global-require": [0],
     "linebreak-style": [0],
     "no-extra-semi": 2,
+    "no-new": [0],
     "no-console": 2,
     "no-debugger": 2,
     "no-extra-parens": 2,
