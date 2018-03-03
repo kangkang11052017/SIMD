@@ -3,16 +3,18 @@ import CSVReader from 'react-csv-reader';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Jumbotron, Table, Col } from 'react-bootstrap';
-import { head, slice, map, upperCase } from 'lodash';
+import { Line } from 'react-chartjs-2';
+import { head, slice, map, upperCase, find } from 'lodash';
 import uuid from 'uuid';
 import Styles from './LandingPage.css';
-import { URL } from '../../constants';
+import { URL, DAYS, CHART } from '../../constants';
 
 class LandingPage extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       table: null,
+      simedConfig: null,
     };
   }
 
@@ -55,14 +57,56 @@ class LandingPage extends PureComponent {
         </Table>
       </Col>
     );
+    // const datasets = {
+    //   room1: {
+    //     actual: [],
+    //     predict: [],
+    //   },
+    // };
+    const roomConfig = {
+      month1: {
+        room1: {
+          bk: null,
+          ek: null,
+        },
+      },
+    };
+    const simedConfig = map(content, (record) => {
+      const [month, room, bk, ek] = record;
+      roomConfig[`month${month}`] = { ...roomConfig[`month${month}`] };
+      roomConfig[`month${month}`][`room${room}`] = { bk, ek };
+      return {
+        month, room, bk, ek,
+      };
+    });
     this.setState((prevState) => {
       return {
         ...prevState,
         table,
+        simedConfig,
+        roomConfig,
       };
     });
   };
+
+  data = {
+    labels: DAYS,
+    datasets: [
+      {
+        ...CHART.ACTUAL,
+        data: [33, 23, 29, 40, 45, 47, 48, 50, 17, 19, 23, 11, 13, 19, 17, 18],
+      },
+      {
+        ...CHART.PREDICT,
+        data: [32, 29, 27, 35, 39, 40, 45, 48, 41, 33, 22, 18, 18, 12, 13, 20],
+      },
+    ],
+  };
+
   render() {
+    const room1 = this.state.simedConfig && find(this.state.simedConfig, (room) => {
+      return room.room === '1' && room.month === '12';
+    });
     return (
       <div>
         <Link to={URL.HOME}>Logout</Link>
@@ -75,6 +119,8 @@ class LandingPage extends PureComponent {
             />
           </Col>
         </Jumbotron>
+        {JSON.stringify(room1)}
+        <Line data={this.data} />
         {this.state.table}
       </div>
     );
