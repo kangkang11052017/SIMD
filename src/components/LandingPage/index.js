@@ -119,8 +119,21 @@ class LandingPage extends PureComponent {
             />
           </Col>
         </Jumbotron>
-        {JSON.stringify(room1)}
-        <Line data={this.data} />
+        <Col sm={6} className={Styles.chart}>
+          <Line data={this.data} />
+        </Col>
+        <Col sm={6}>
+          <Line data={this.data} />
+        </Col>
+        <Col sm={6}>
+          <Line data={this.data} />
+        </Col>
+        <Col sm={6}>
+          <Line data={this.data} />
+        </Col>
+        <Col sm={6}>
+          <Line data={this.data} />
+        </Col>
         {this.state.table}
       </div>
     );
