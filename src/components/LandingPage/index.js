@@ -2,9 +2,9 @@ import React, { PureComponent } from 'react';
 import CSVReader from 'react-csv-reader';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
-import { Jumbotron, Table, Col } from 'react-bootstrap';
+import { Jumbotron, Table, Col, Button } from 'react-bootstrap';
 import { Line } from 'react-chartjs-2';
-import { head, slice, map, upperCase, find } from 'lodash';
+import { head, slice, map, upperCase } from 'lodash';
 import uuid from 'uuid';
 import Styles from './LandingPage.css';
 import { URL, DAYS, CHART } from '../../constants';
@@ -14,7 +14,6 @@ class LandingPage extends PureComponent {
     super(props);
     this.state = {
       table: null,
-      simedConfig: null,
     };
   }
 
@@ -89,6 +88,10 @@ class LandingPage extends PureComponent {
     });
   };
 
+  onSendEmail = () => {
+    alert('Send Email to your operator!');
+  }
+
   data = {
     labels: DAYS,
     datasets: [
@@ -104,12 +107,12 @@ class LandingPage extends PureComponent {
   };
 
   render() {
-    const room1 = this.state.simedConfig && find(this.state.simedConfig, (room) => {
-      return room.room === '1' && room.month === '12';
-    });
     return (
       <div>
-        <Link to={URL.HOME}>Logout</Link>
+        <Button>
+          <Link to={URL.HOME}>Logout</Link>
+        </Button>
+        <Button onClick={this.onSendEmail}>Send Email</Button>
         <Jumbotron bsStyle={Styles.landingpage}>
           <Col smOffset={2} sm={8}>
             <CSVReader
