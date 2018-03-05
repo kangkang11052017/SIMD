@@ -1,22 +1,75 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
+import { object, func } from 'prop-types';
 import CSVReader from 'react-csv-reader';
 import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Jumbotron, Table, Col, Button } from 'react-bootstrap';
 import { Line } from 'react-chartjs-2';
-import { head, slice, map, upperCase, range } from 'lodash';
+import { head, slice, map, upperCase, range, keys } from 'lodash';
 import uuid from 'uuid';
 import Styles from './LandingPage.css';
-import { URL, DAYS, CHART } from '../../constants';
+import reducers from './reducers';
+import { actions } from '../../store/reducers';
+import { URL, CHART } from '../../constants';
 
-class LandingPage extends PureComponent {
+class LandingPage extends Component {
+  static propTypes = {
+    chartData: object.isRequired,
+    roomConfig: object.isRequired,
+    temperatureObj: object.isRequired,
+    setChartData: func.isRequired,
+    setRoomConfig: func.isRequired,
+    setTempObj: func.isRequired,
+  }
+
   constructor(props) {
     super(props);
     this.state = {
       table: null,
-      roomConfig: null,
-      temperatureObj: null,
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { chartData, roomConfig, temperatureObj } = nextProps;
+    if (!chartData && roomConfig && temperatureObj) {
+      const chartDataPlot = {};
+      const chartDataSet = {};
+      map(roomConfig, (rooms, month) => {
+        map(rooms, (room, roomNo) => {
+          chartDataSet[roomNo] = { ...chartDataSet[roomNo] };
+          map(temperatureObj[month], (avgTempOfDay, date) => {
+            chartDataSet[roomNo].Predict = { ...chartDataSet[roomNo].Predict };
+            chartDataSet[roomNo].Predict[month] = { ...chartDataSet[roomNo].Predict[month] };
+            chartDataSet[roomNo].Predict[month][date] = { ...chartDataSet[roomNo].Predict[month][date] };
+            chartDataSet[roomNo].Actual = { ...chartDataSet[roomNo].Actual };
+            chartDataSet[roomNo].Actual[month] = { ...chartDataSet[roomNo].Actual[month] };
+            chartDataSet[roomNo].Actual[month][date] = { ...chartDataSet[roomNo].Actual[month][date] };
+            if (!Array.isArray(avgTempOfDay)) {
+              chartDataSet[roomNo].Actual[month][date] = avgTempOfDay;
+              chartDataSet[roomNo].Predict[month][date] = avgTempOfDay + room.ek + (room.bk * avgTempOfDay);
+            } else {
+              chartDataSet[roomNo].Actual[month][date] = 0;
+              chartDataSet[roomNo].Predict[month][date] = 0;
+            }
+          });
+        });
+      });
+      map(chartDataSet, (dual, room) => {
+        chartDataPlot[room] = { Actual: [], Predict: [] };
+        map(dual.Actual, (val) => {
+          map(val, (temp) => {
+            chartDataPlot[room].Actual.push(temp);
+          });
+        });
+        map(dual.Predict, (val) => {
+          map(val, (temp) => {
+            chartDataPlot[room].Predict.push(temp);
+          });
+        });
+      });
+      this.props.setChartData(chartDataPlot);
+    }
   }
 
   onConfigHandle = (rawData) => {
@@ -59,7 +112,7 @@ class LandingPage extends PureComponent {
       </Col>
     );
     const roomConfig = {};
-    const simedConfig = map(content, (record) => {
+    map(content, (record) => {
       const [month, room, bk, ek] = record;
       if (month) {
         roomConfig[`${month - 1}`] = { ...roomConfig[`${month - 1}`] };
@@ -69,11 +122,12 @@ class LandingPage extends PureComponent {
         month, room, bk, ek,
       };
     });
+    this.props.setRoomConfig(roomConfig);
+
     this.setState((prevState) => {
       return {
         ...prevState,
         table,
-        simedConfig,
         roomConfig,
       };
     });
@@ -106,6 +160,7 @@ class LandingPage extends PureComponent {
         }
       });
     });
+    this.props.setTempObj(temperatureObj);
     this.setState((prevState) => {
       return {
         ...prevState,
@@ -113,45 +168,51 @@ class LandingPage extends PureComponent {
       };
     });
   }
-  onSendEmail = () => {
-    alert('Send Email to your operator!');
-  }
 
   getChartData = (state) => {
     const { roomConfig, temperatureObj } = state;
+    const chartDataSet = {};
+    const chartData = {};
     if (roomConfig && temperatureObj) {
       map(roomConfig, (rooms, month) => {
-        console.log('month', month);
-        console.log('room', rooms);
-        map(rooms, (room) => {
-          map(temperatureObj[month], (day) => {
-            console.log('day - room', day, ' - ', room);
-            console.log('temparature', day + rooms[room].ek);
+        map(rooms, (room, roomNo) => {
+          chartDataSet[roomNo] = { ...chartDataSet[roomNo] };
+          map(temperatureObj[month], (avgTempOfDay, date) => {
+            chartDataSet[roomNo].Predict = { ...chartDataSet[roomNo].Predict };
+            chartDataSet[roomNo].Predict[month] = { ...chartDataSet[roomNo].Predict[month] };
+            chartDataSet[roomNo].Predict[month][date] = { ...chartDataSet[roomNo].Predict[month][date] };
+            chartDataSet[roomNo].Actual = { ...chartDataSet[roomNo].Actual };
+            chartDataSet[roomNo].Actual[month] = { ...chartDataSet[roomNo].Actual[month] };
+            chartDataSet[roomNo].Actual[month][date] = { ...chartDataSet[roomNo].Actual[month][date] };
+            if (!Array.isArray(avgTempOfDay)) {
+              chartDataSet[roomNo].Actual[month][date] = avgTempOfDay;
+              chartDataSet[roomNo].Predict[month][date] = avgTempOfDay + room.ek + (room.bk * avgTempOfDay);
+            } else {
+              chartDataSet[roomNo].Actual[month][date] = 0;
+              chartDataSet[roomNo].Predict[month][date] = 0;
+            }
+          });
+        });
+      });
+      map(chartDataSet, (dual, room) => {
+        chartData[room] = { Actual: [], Predict: [] };
+        // console.log('room', room);
+        map(dual.Actual, (val) => {
+          map(val, (temp) => {
+            chartData[room].Actual.push(temp);
+          });
+        });
+        map(dual.Predict, (val) => {
+          map(val, (temp) => {
+            chartData[room].Predict.push(temp);
           });
         });
       });
     }
-
-    console.log('roomConfig', roomConfig);
-    console.log('temperatureObj', temperatureObj);
   }
 
-  data = {
-    labels: DAYS,
-    datasets: [
-      {
-        ...CHART.ACTUAL,
-        data: [33, 23, 29, 40, 45, 47, 48, 50, 17, 19, 23, 11, 13, 19, 17, 18],
-      },
-      {
-        ...CHART.PREDICT,
-        data: [32, 29, 27, 35, 39, 40, 45, 48, 41, 33, 22, 18, 18, 12, 13, 20],
-      },
-    ],
-  };
-
   render() {
-    this.getChartData(this.state);
+    const { chartData, roomConfig, temperatureObj } = this.props;
     return (
       <div>
         <Button>
@@ -174,6 +235,7 @@ class LandingPage extends PureComponent {
             />
           </Col>
         </Jumbotron>
+        { keys(this.state.chartData) }
         <Col sm={6} className={Styles.chart}>
           <Line data={this.data} />
         </Col>
@@ -195,4 +257,27 @@ class LandingPage extends PureComponent {
   }
 }
 
-export default withRouter(LandingPage);
+const mapStateToProps = (state) => {
+  return {
+    chartData: state.chartReducers.get('chartData'),
+    roomConfig: state.chartReducers.get('roomConfig'),
+    temperatureObj: state.chartReducers.get('temperatureObj'),
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setChartData: (data) => {
+      dispatch(actions.setChartData(data));
+    },
+    setRoomConfig: (config) => {
+      dispatch(actions.setRoomConfig(config));
+    },
+    setTempObj: (obj) => {
+      dispatch(actions.setTempObj(obj));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(LandingPage));
+export { reducers };

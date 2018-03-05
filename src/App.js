@@ -1,15 +1,14 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import store from './store';
 import Authentication from './components/Auth';
 import LandingPage from './components/LandingPage/';
 import { URL } from './constants';
+import createStore from './store';
 import './App.css';
 
-const appStore = createStore(store);
+const appStore = createStore();
 
 const App = () => {
   return (

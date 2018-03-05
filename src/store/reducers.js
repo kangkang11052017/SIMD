@@ -1,15 +1,18 @@
 import { fromJS } from 'immutable';
 import { find } from 'lodash';
 import { createActions } from 'redux-actions';
-import { AUTH } from './constants';
+import { AUTH, ACTION } from '../constants';
 
 const initState = fromJS({
   login: null,
 });
 
-const { signUp, logIn } = createActions({
+const actions = createActions({
   [AUTH.SIGN_UP]: (user) => { return user; },
   [AUTH.LOGIN]: (user) => { return user; },
+  [ACTION.SET_ROOM_CONFIG]: (config) => { return config; },
+  [ACTION.SET_TEMP_OBJ]: (obj) => { return obj; },
+  [ACTION.SET_CHART_DATA]: (data) => { return data; },
 });
 
 const validateSignUp = (name, mail, password, users) => {
@@ -22,7 +25,7 @@ const validateSignUp = (name, mail, password, users) => {
   return existName && existEmail;
 };
 
-const simedtrieste = (state = initState, action) => {
+const simedReducers = (state = initState, action) => {
   switch (action.type) {
   case AUTH.SIGN_UP: {
     const { userName, email, password } = action.payload;
@@ -43,9 +46,5 @@ const simedtrieste = (state = initState, action) => {
   }
 };
 
-export default {
-  simedtrieste,
-  signUp,
-  logIn,
-};
-
+export default { simedReducers };
+export { actions };

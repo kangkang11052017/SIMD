@@ -1,3 +1,4 @@
+import keyMirror from 'key-mirror';
 import { map, range } from 'lodash';
 
 export const URL = {
@@ -5,11 +6,22 @@ export const URL = {
   LANDING: '/landingpage',
 };
 
+export const AUTH = keyMirror({
+  SIGN_UP: null,
+  LOGIN: null,
+});
+
 export const DAYS = map(range(1, 16), (d) => {
   return `${d}`;
 });
 
 export const ROOMS = range(1, 5);
+
+export const ACTION = keyMirror({
+  SET_ROOM_CONFIG: null,
+  SET_TEMP_OBJ: null,
+  SET_CHART_DATA: null,
+});
 
 export const CHART = {
   BLUE: 'rgba(49,99,188,1)',
