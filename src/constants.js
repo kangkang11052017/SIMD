@@ -12,8 +12,8 @@ export const DAYS = map(range(1, 16), (d) => {
 export const ROOMS = range(1, 5);
 
 export const CHART = {
-  BLUE: 'rgba(49, 99, 188, 1)',
-  RED: 'rgba(261, 86, 65, 1)',
+  BLUE: 'rgba(49,99,188,1)',
+  RED: 'rgba(261,86,65,1)',
   OPTION: {
     fill: false,
     fillColor: 'rgba(0,100,62,0.83)',
@@ -50,4 +50,16 @@ export const CHART = {
       ...this.OPTION,
     };
   },
+  0: 31,
+  1: 28,
+  2: 31,
+  3: 30,
+  4: 31,
+  5: 30,
+  6: 31,
+  7: 31,
+  8: 30,
+  9: 31,
+  10: 30,
+  11: 31,
 };

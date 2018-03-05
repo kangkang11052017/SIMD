@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Jumbotron, Table, Col, Button } from 'react-bootstrap';
 import { Line } from 'react-chartjs-2';
-import { head, slice, map, upperCase } from 'lodash';
+import { head, slice, map, upperCase, range } from 'lodash';
 import uuid from 'uuid';
 import Styles from './LandingPage.css';
 import { URL, DAYS, CHART } from '../../constants';
@@ -14,10 +14,12 @@ class LandingPage extends PureComponent {
     super(props);
     this.state = {
       table: null,
+      roomConfig: null,
+      temperatureObj: null,
     };
   }
 
-  onDataHandle = (rawData) => {
+  onConfigHandle = (rawData) => {
     const header = head(rawData);
     const content = slice(rawData, 1, rawData.length);
     const table = (
@@ -56,24 +58,13 @@ class LandingPage extends PureComponent {
         </Table>
       </Col>
     );
-    // const datasets = {
-    //   room1: {
-    //     actual: [],
-    //     predict: [],
-    //   },
-    // };
-    const roomConfig = {
-      month1: {
-        room1: {
-          bk: null,
-          ek: null,
-        },
-      },
-    };
+    const roomConfig = {};
     const simedConfig = map(content, (record) => {
       const [month, room, bk, ek] = record;
-      roomConfig[`month${month}`] = { ...roomConfig[`month${month}`] };
-      roomConfig[`month${month}`][`room${room}`] = { bk, ek };
+      if (month) {
+        roomConfig[`${month - 1}`] = { ...roomConfig[`${month - 1}`] };
+        roomConfig[`${month - 1}`][`${room}`] = { bk: Number(bk), ek: Number(ek) };
+      }
       return {
         month, room, bk, ek,
       };
@@ -88,8 +79,61 @@ class LandingPage extends PureComponent {
     });
   };
 
+  onDataHandle = (temperatureData) => {
+    const dataContent = slice(temperatureData, 1);
+    const temperatureObj = {};
+    map(range(0, 12), (month) => {
+      temperatureObj[month] = {};
+      map(range(0, CHART[month]), (day) => {
+        temperatureObj[month][day] = [];
+      });
+    });
+    map(dataContent, (min) => {
+      const date = new Date(min[0]);
+      const day = date.getDate();
+      const month = date.getMonth();
+      if (month && day) {
+        temperatureObj[month][day].push(Number(min[1]));
+      }
+    });
+    map(temperatureObj, (month, im) => {
+      map(month, (day, id) => {
+        if (day.length > 1) {
+          const average = day.reduce((acc, nextValue) => {
+            return acc + Number(nextValue);
+          }) / day.length;
+          temperatureObj[im][id] = average;
+        }
+      });
+    });
+    this.setState((prevState) => {
+      return {
+        ...prevState,
+        temperatureObj,
+      };
+    });
+  }
   onSendEmail = () => {
     alert('Send Email to your operator!');
+  }
+
+  getChartData = (state) => {
+    const { roomConfig, temperatureObj } = state;
+    if (roomConfig && temperatureObj) {
+      map(roomConfig, (rooms, month) => {
+        console.log('month', month);
+        console.log('room', rooms);
+        map(rooms, (room) => {
+          map(temperatureObj[month], (day) => {
+            console.log('day - room', day, ' - ', room);
+            console.log('temparature', day + rooms[room].ek);
+          });
+        });
+      });
+    }
+
+    console.log('roomConfig', roomConfig);
+    console.log('temperatureObj', temperatureObj);
   }
 
   data = {
@@ -107,6 +151,7 @@ class LandingPage extends PureComponent {
   };
 
   render() {
+    this.getChartData(this.state);
     return (
       <div>
         <Button>
@@ -114,9 +159,16 @@ class LandingPage extends PureComponent {
         </Button>
         <Button onClick={this.onSendEmail}>Send Email</Button>
         <Jumbotron bsStyle={Styles.landingpage}>
-          <Col smOffset={2} sm={8}>
+          <Col smOffset={1} sm={4}>
             <CSVReader
-              label="Select csv file to dictate the relative between Actual/Predict Temperature"
+              label="Select system config (Room, b(k), e(k))"
+              cssClass="react-csv-input"
+              onFileLoaded={this.onConfigHandle}
+            />
+          </Col>
+          <Col smOffset={1} sm={4}>
+            <CSVReader
+              label="Select temperature statistics (c(k))"
               cssClass="react-csv-input"
               onFileLoaded={this.onDataHandle}
             />
