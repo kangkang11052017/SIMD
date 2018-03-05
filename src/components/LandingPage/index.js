@@ -3,10 +3,9 @@ import { object, func } from 'prop-types';
 import CSVReader from 'react-csv-reader';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { Jumbotron, Table, Col, Button, Panel } from 'react-bootstrap';
+import { Col, Panel, Navbar, Nav, NavItem } from 'react-bootstrap';
 import { Line } from 'react-chartjs-2';
-import { head, slice, map, upperCase, range } from 'lodash';
+import { slice, map, range } from 'lodash';
 import uuid from 'uuid';
 import Styles from './LandingPage.css';
 import reducers from './reducers';
@@ -31,7 +30,8 @@ class LandingPage extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { chartData, roomConfig, temperatureObj } = nextProps;
-    if (!chartData && roomConfig && temperatureObj) {
+    if ((!chartData && roomConfig && temperatureObj) ||
+      (chartData && this.props.temperatureObj.length !== temperatureObj.length)) {
       const chartDataPlot = {};
       const chartDataSet = {};
       map(roomConfig, (rooms, month) => {
@@ -72,44 +72,7 @@ class LandingPage extends Component {
   }
 
   onConfigHandle = (rawData) => {
-    const header = head(rawData);
     const content = slice(rawData, 1, rawData.length);
-    const table = (
-      <Col smOffset={2} sm={8}>
-        <Table responsive striped hover>
-          <thead>
-            {
-              <tr>
-                {
-                  map(header, (th) => {
-                    return (<th key={th}>{upperCase(th)}</th>);
-                  })
-                }
-              </tr>
-            }
-          </thead>
-          <tbody>
-            {
-              map(content, (row) => {
-                const trId = uuid();
-                return (
-                  <tr key={trId}>
-                    {
-                      map(row, (td) => {
-                        const tdId = uuid();
-                        return (
-                          <td key={tdId}>{td}</td>
-                        );
-                      })
-                    }
-                  </tr>
-                );
-              })
-            }
-          </tbody>
-        </Table>
-      </Col>
-    );
     const roomConfig = {};
     map(content, (record) => {
       const [month, room, bk, ek] = record;
@@ -122,14 +85,6 @@ class LandingPage extends Component {
       };
     });
     this.props.setRoomConfig(roomConfig);
-
-    this.setState((prevState) => {
-      return {
-        ...prevState,
-        table,
-        roomConfig,
-      };
-    });
   };
 
   onDataHandle = (temperatureData) => {
@@ -145,7 +100,7 @@ class LandingPage extends Component {
       const date = new Date(min[0]);
       const day = date.getDate();
       const month = date.getMonth();
-      if (month && day) {
+      if (month !== undefined && day) {
         temperatureObj[month][day].push(Number(min[1]));
       }
     });
@@ -160,54 +115,6 @@ class LandingPage extends Component {
       });
     });
     this.props.setTempObj(temperatureObj);
-    this.setState((prevState) => {
-      return {
-        ...prevState,
-        temperatureObj,
-      };
-    });
-  }
-
-  getChartData = (state) => {
-    const { roomConfig, temperatureObj } = state;
-    const chartDataSet = {};
-    const chartData = {};
-    if (roomConfig && temperatureObj) {
-      map(roomConfig, (rooms, month) => {
-        map(rooms, (room, roomNo) => {
-          chartDataSet[roomNo] = { ...chartDataSet[roomNo] };
-          map(temperatureObj[month], (avgTempOfDay, date) => {
-            chartDataSet[roomNo].Predict = { ...chartDataSet[roomNo].Predict };
-            chartDataSet[roomNo].Predict[month] = { ...chartDataSet[roomNo].Predict[month] };
-            chartDataSet[roomNo].Predict[month][date] = { ...chartDataSet[roomNo].Predict[month][date] };
-            chartDataSet[roomNo].Actual = { ...chartDataSet[roomNo].Actual };
-            chartDataSet[roomNo].Actual[month] = { ...chartDataSet[roomNo].Actual[month] };
-            chartDataSet[roomNo].Actual[month][date] = { ...chartDataSet[roomNo].Actual[month][date] };
-            if (!Array.isArray(avgTempOfDay)) {
-              chartDataSet[roomNo].Actual[month][date] = avgTempOfDay;
-              chartDataSet[roomNo].Predict[month][date] = avgTempOfDay + room.ek + (room.bk * avgTempOfDay);
-            } else {
-              chartDataSet[roomNo].Actual[month][date] = 0;
-              chartDataSet[roomNo].Predict[month][date] = 0;
-            }
-          });
-        });
-      });
-      map(chartDataSet, (dual, room) => {
-        chartData[room] = { Actual: [], Predict: [] };
-        // console.log('room', room);
-        map(dual.Actual, (val) => {
-          map(val, (temp) => {
-            chartData[room].Actual.push(temp);
-          });
-        });
-        map(dual.Predict, (val) => {
-          map(val, (temp) => {
-            chartData[room].Predict.push(temp);
-          });
-        });
-      });
-    }
   }
 
   render() {
@@ -229,26 +136,35 @@ class LandingPage extends Component {
     });
     return (
       <div>
-        <Button>
-          <Link to={URL.HOME}>Logout</Link>
-        </Button>
-        <Button onClick={this.onSendEmail}>Send Email</Button>
-        <Jumbotron bsStyle={Styles.landingpage}>
-          <Col smOffset={1} sm={4}>
-            <CSVReader
-              label="Select system config (Room, b(k), e(k))"
-              cssClass="react-csv-input"
-              onFileLoaded={this.onConfigHandle}
-            />
-          </Col>
-          <Col smOffset={1} sm={4}>
-            <CSVReader
-              label="Select temperature statistics (c(k))"
-              cssClass="react-csv-input"
-              onFileLoaded={this.onDataHandle}
-            />
-          </Col>
-        </Jumbotron>
+        <Navbar>
+          <Navbar.Header>
+            <Navbar.Brand>
+              <a href="/">SimedTrieste</a>
+            </Navbar.Brand>
+          </Navbar.Header>
+          <Nav pullRight>
+            <NavItem>
+              <a href={URL.HOME}>Log Off</a>
+            </NavItem>
+            <NavItem>
+              <a href="/sendmail">Send email</a>
+            </NavItem>
+          </Nav>
+        </Navbar>
+        <Col smOffset={1} sm={4}>
+          <CSVReader
+            label="Select system config (Room, b(k), e(k))"
+            cssClass="react-csv-input"
+            onFileLoaded={this.onConfigHandle}
+          />
+        </Col>
+        <Col smOffset={1} sm={4}>
+          <CSVReader
+            label="Select temperature statistics (c(k))"
+            cssClass="react-csv-input"
+            onFileLoaded={this.onDataHandle}
+          />
+        </Col>
         {
           map(collections, (data, room) => {
             const uid = uuid();
