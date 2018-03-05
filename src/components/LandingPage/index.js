@@ -4,9 +4,9 @@ import CSVReader from 'react-csv-reader';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Jumbotron, Table, Col, Button } from 'react-bootstrap';
+import { Jumbotron, Table, Col, Button, Panel } from 'react-bootstrap';
 import { Line } from 'react-chartjs-2';
-import { head, slice, map, upperCase, range, keys } from 'lodash';
+import { head, slice, map, upperCase, range } from 'lodash';
 import uuid from 'uuid';
 import Styles from './LandingPage.css';
 import reducers from './reducers';
@@ -15,19 +15,18 @@ import { URL, CHART } from '../../constants';
 
 class LandingPage extends Component {
   static propTypes = {
-    chartData: object.isRequired,
-    roomConfig: object.isRequired,
-    temperatureObj: object.isRequired,
+    chartData: object,
+    roomConfig: object,
+    temperatureObj: object,
     setChartData: func.isRequired,
     setRoomConfig: func.isRequired,
     setTempObj: func.isRequired,
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      table: null,
-    };
+  static defaultProps = {
+    chartData: null,
+    roomConfig: null,
+    temperatureObj: null,
   }
 
   componentWillReceiveProps(nextProps) {
@@ -212,7 +211,22 @@ class LandingPage extends Component {
   }
 
   render() {
-    const { chartData, roomConfig, temperatureObj } = this.props;
+    const { chartData } = this.props;
+    const collections = map(chartData, (data) => {
+      return {
+        labels: range(0, data.Actual.length),
+        datasets: [
+          {
+            ...CHART.ACTUAL,
+            data: data.Actual,
+          },
+          {
+            ...CHART.PREDICT,
+            data: data.Predict,
+          },
+        ],
+      };
+    });
     return (
       <div>
         <Button>
@@ -235,23 +249,21 @@ class LandingPage extends Component {
             />
           </Col>
         </Jumbotron>
-        { keys(this.state.chartData) }
-        <Col sm={6} className={Styles.chart}>
-          <Line data={this.data} />
-        </Col>
-        <Col sm={6}>
-          <Line data={this.data} />
-        </Col>
-        <Col sm={6}>
-          <Line data={this.data} />
-        </Col>
-        <Col sm={6}>
-          <Line data={this.data} />
-        </Col>
-        <Col sm={6}>
-          <Line data={this.data} />
-        </Col>
-        {this.state.table}
+        {
+          map(collections, (data, room) => {
+            const uid = uuid();
+            return (
+              <Col key={uid} smOffset={2} sm={8} className={Styles.chart}>
+                <Panel>
+                  <Panel.Heading>ROOM {room + 1}</Panel.Heading>
+                  <Panel.Body>
+                    <Line data={data} />
+                  </Panel.Body>
+                </Panel>
+              </Col>
+            );
+          })
+        }
       </div>
     );
   }

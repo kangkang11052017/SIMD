@@ -1,5 +1,9 @@
-import { createStore as createReduxStore, applyMiddleware, compose, combineReducers } from 'redux';
-import { createEpicMiddleware } from 'redux-observable';
+import {
+  createStore as createReduxStore,
+  // applyMiddleware,
+  compose, combineReducers,
+} from 'redux';
+// import { createEpicMiddleware,} from 'redux-observable';
 import { reducer as formReducer } from 'redux-form';
 import reducers from './reducers';
 import { reducers as landingPageReducers } from '../components/LandingPage';
