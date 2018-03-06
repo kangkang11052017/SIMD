@@ -9,12 +9,14 @@ class Mailer{
 	  	    props.put("mail.smtp.host", "smtp.gmail.com");
 	  	    props.put("mail.from", from);
 	  	    props.put("mail.smtp.starttls.enable", "true");
-	  	    props.put("mail.smtp.port", "587");
+	  	    //props.put("mail.smtp.starttls.required", "true");
+	  	    props.put("mail.smtp.port", "465");
 	  	    props.setProperty("mail.debug", "true");  
-	  	    props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+	  	    //props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+	  	    props.put("mail.smtp.ssl.enable", "true");
 	  	    props.setProperty("mail.smtp.user", from);
 	  	    props.setProperty("mail.smtp.password", password);
-	  	    props.setProperty("mail.smtp.auth", "true"); 	  	    
+	  	    props.setProperty("mail.smtp.auth", "true"); 	 
           //get Session   
           Session session = Session.getDefaultInstance(props,    
            new javax.mail.Authenticator() {    
