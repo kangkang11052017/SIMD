@@ -10,7 +10,7 @@ class Mailer{
 	  	    props.put("mail.from", from);
 	  	    props.put("mail.smtp.starttls.enable", "true");
 	  	    props.put("mail.smtp.port", "587");
-	  	    props.setProperty("mail.debug", "false");  
+	  	    props.setProperty("mail.debug", "true");  
 	  	    props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 	  	    props.setProperty("mail.smtp.user", from);
 	  	    props.setProperty("mail.smtp.password", password);
