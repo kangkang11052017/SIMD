@@ -1,0 +1,8 @@
+2018-03-06 21:28:19.626  INFO 13456 --- [main] com.small.business.Application           : Starting Application v0.1.0 on vunguyen-PC with PID 13456 (C:\Users\vunguyen\Documents\SIMD\api\simedtrieste\target\simedtrieste-0.1.0.jar started by vunguyen in C:\Users\vunguyen\Documents\SIMD\api\simedtrieste)
+2018-03-06 21:28:19.658  INFO 13456 --- [main] com.small.business.Application           : No active profile set, falling back to default profiles: default
+2018-03-06 21:33:28.096  INFO 13344 --- [main] com.small.business.Application           : Starting Application v0.1.0 on vunguyen-PC with PID 13344 (C:\Users\vunguyen\Documents\SIMD\api\simedtrieste\target\simedtrieste-0.1.0.jar started by vunguyen in C:\Users\vunguyen\Documents\SIMD\api\simedtrieste)
+2018-03-06 21:33:28.225  INFO 13344 --- [main] com.small.business.Application           : No active profile set, falling back to default profiles: default
+2018-03-06 21:33:54.140  INFO 13344 --- [main] com.small.business.Application           : Started Application in 34.255 seconds (JVM running for 35.235)
+2018-03-06 21:36:06.560  INFO 14248 --- [main] com.small.business.Application           : Starting Application v0.1.0 on vunguyen-PC with PID 14248 (C:\Users\vunguyen\Documents\SIMD\api\simedtrieste\target\simedtrieste-0.1.0.jar started by vunguyen in C:\Users\vunguyen\Documents\SIMD\api\simedtrieste)
+2018-03-06 21:36:06.575  INFO 14248 --- [main] com.small.business.Application           : No active profile set, falling back to default profiles: default
+2018-03-06 21:36:29.455  INFO 14248 --- [main] com.small.business.Application           : Started Application in 30.409 seconds (JVM running for 31.646)
