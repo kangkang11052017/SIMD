@@ -4,7 +4,16 @@ import { map, range } from 'lodash';
 export const URL = {
   HOME: '/',
   LANDING: '/landingpage',
+  HOST: 'localhost:9090/api/',
+  USERS: 'user',
+  MAIL: 'sendMail',
 };
+
+export const ACTION_REQ = keyMirror({
+  START: null,
+  SUCCESS: null,
+  ERROR: null,
+});
 
 export const AUTH = keyMirror({
   SIGN_UP: null,
@@ -21,6 +30,7 @@ export const ACTION = keyMirror({
   SET_ROOM_CONFIG: null,
   SET_TEMP_OBJ: null,
   SET_CHART_DATA: null,
+  SEND_MAIL: null,
 });
 
 export const CHART = {

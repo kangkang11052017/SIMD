@@ -1,9 +1,12 @@
 import React, { PureComponent, Fragment } from 'react';
 import { Button, Form, FormGroup, Col, ControlLabel } from 'react-bootstrap';
-import { func, bool, object } from 'prop-types';
+import { func, bool, object, array } from 'prop-types';
+import { connect } from 'react-redux';
+import { compose } from 'recompose';
 import { withRouter } from 'react-router';
 import { reduxForm, Field } from 'redux-form';
 import InputField from './InputField';
+import { fetchUsers } from './actions';
 import { URL } from '../../constants';
 
 class LoginForm extends PureComponent {
@@ -12,6 +15,12 @@ class LoginForm extends PureComponent {
     handleSubmit: func.isRequired,
     logged: bool.isRequired,
     history: object.isRequired,
+    users: array.isRequired,
+    dispatchFetchUsers: func.isRequired,
+  }
+
+  componentDidMount() {
+    this.props.dispatchFetchUsers();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -21,7 +30,8 @@ class LoginForm extends PureComponent {
   }
 
   render() {
-    const { handleSubmit, onLogin } = this.props;
+    const { handleSubmit, onLogin, users } = this.props;
+    console.log('users', users);
     return (
       <Fragment>
         <Form horizontal>
@@ -59,7 +69,29 @@ class LoginForm extends PureComponent {
   }
 }
 
-export default withRouter(reduxForm({
-  form: 'LOGIN',
-})(LoginForm));
+const mapStateToProps = (state) => {
+  console.log('state', state);
+  return {
+    users: state.users.get('users'),
+    isLoading: state.users.get('isLoading'),
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    dispatchFetchUsers: () => {
+      dispatch(fetchUsers.start());
+    },
+  };
+};
+
+const enhancers = [
+  connect(mapStateToProps, mapDispatchToProps),
+  withRouter,
+  reduxForm({
+    form: 'LOGIN',
+  }),
+];
+
+export default compose(...enhancers)(LoginForm);
 

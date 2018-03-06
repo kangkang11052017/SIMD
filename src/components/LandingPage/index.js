@@ -3,10 +3,11 @@ import { object, func } from 'prop-types';
 import CSVReader from 'react-csv-reader';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { Col, Panel, Navbar, Nav, NavItem } from 'react-bootstrap';
+import { Col, Panel, Navbar, Nav, NavItem, Button } from 'react-bootstrap';
 import { Line } from 'react-chartjs-2';
 import { slice, map, range } from 'lodash';
 import uuid from 'uuid';
+import Email from '../Email';
 import Styles from './LandingPage.css';
 import reducers from './reducers';
 import { actions } from '../../store/reducers';
@@ -20,12 +21,20 @@ class LandingPage extends Component {
     setChartData: func.isRequired,
     setRoomConfig: func.isRequired,
     setTempObj: func.isRequired,
+    history: object.isRequired,
   }
 
   static defaultProps = {
     chartData: null,
     roomConfig: null,
     temperatureObj: null,
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: false,
+    };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -117,8 +126,33 @@ class LandingPage extends Component {
     this.props.setTempObj(temperatureObj);
   }
 
+  onSendEmail = () => {
+    this.setState((prevState) => {
+      return {
+        ...prevState,
+        email: true,
+      };
+    });
+  }
+
+  onLogOut = () => {
+    console.log('this.prop', this.props);
+    this.props.history.push(URL.HOME)
+  }
+
+  emailSent = () => {
+    this.setState((prevState) => {
+      return {
+        ...prevState,
+        email: false,
+      };
+    });
+  }
+
+
   render() {
     const { chartData } = this.props;
+    console.log('this.state in landing page', this.state);
     const collections = map(chartData, (data) => {
       return {
         labels: range(0, data.Actual.length),
@@ -134,8 +168,10 @@ class LandingPage extends Component {
         ],
       };
     });
+
     return (
       <div>
+        <Email isOpen={this.state.email} onClose={this.emailSent} />
         <Navbar>
           <Navbar.Header>
             <Navbar.Brand>
@@ -144,10 +180,10 @@ class LandingPage extends Component {
           </Navbar.Header>
           <Nav pullRight>
             <NavItem>
-              <a href={URL.HOME}>Log Off</a>
+              <Button onClick={this.onLogOut}>Log out</Button>
             </NavItem>
             <NavItem>
-              <a href="/sendmail">Send email</a>
+              <Button onClick={this.onSendEmail}>Send email</Button>
             </NavItem>
           </Nav>
         </Navbar>

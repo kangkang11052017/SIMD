@@ -4,6 +4,8 @@ import { Button } from 'react-bootstrap';
 import { withRouter } from 'react-router';
 import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
+import reducers from './reducers';
+import effects from './effects';
 
 class Authentication extends PureComponent {
   constructor(props) {
@@ -130,3 +132,4 @@ class Authentication extends PureComponent {
 }
 
 export default withRouter(Authentication);
+export { reducers, effects };
