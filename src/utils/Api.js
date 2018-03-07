@@ -37,7 +37,6 @@ const handleErrorResponse = (error) => {
 
 const xhr = (route, params, verb, isGlobal) => {
   const url = isGlobal ? route : `${host}${route}`;
-  console.log('url', url);
   const options = Object.assign({ method: verb }, params ?
     { body: JSON.stringify(params) } : null);
   options.headers = headers;
@@ -51,7 +50,6 @@ const Api = {
     return xhr(route, null, 'GET', true);
   },
   get: (route) => {
-    console.log('route', route);
     return xhr(route, null, 'GET');
   },
   put: (route, params) => {

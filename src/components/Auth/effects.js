@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
-import { fetchUsers } from './actions';
-import FETCH_USERS from './actionTypes';
+import { fetchUsers, signUp } from './actions';
+import { FETCH_USERS, SIGN_UP } from './actionTypes';
 import services from './services';
 
 const fetchUsersEpic = (action$) => {
@@ -9,7 +9,6 @@ const fetchUsersEpic = (action$) => {
       return services
         .fetchUsers()
         .flatMap((response) => {
-          console.log('response', response);
           return Observable.of(fetchUsers.success(response));
         })
         .catch((error) => {
@@ -18,4 +17,18 @@ const fetchUsersEpic = (action$) => {
     });
 };
 
-export default [fetchUsersEpic];
+const signUpEpic = (action$) => {
+  return action$.ofType(SIGN_UP.START)
+    .switchMap(() => {
+      return services
+        .signUp()
+        .flatMap((response) => {
+          return Observable.of(signUp.success(response));
+        })
+        .catch((error) => {
+          return Observable.of(signUp.error(error));
+        });
+    });
+};
+
+export default [fetchUsersEpic, signUpEpic];

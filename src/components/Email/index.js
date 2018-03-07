@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import { bool, func } from 'prop-types';
-import { Field, reduxForm } from 'redux-form/immutable';
+import { reduxForm } from 'redux-form/immutable';
 import { connect } from 'react-redux';
+import { Modal, FormControl, FormGroup, ControlLabel, Button } from 'react-bootstrap';
 import { compose } from 'recompose';
 import effects from './effects';
-import { Modal, FormControl, FormGroup, ControlLabel, Button } from 'react-bootstrap';
 
 class Email extends PureComponent {
   static propTypes = {
@@ -39,7 +39,6 @@ class Email extends PureComponent {
   }
 
   render() {
-    console.log('ths.state', this.state);
     return (
       <div className="modal-container">
         <Modal container={this} autoFocus show={this.state.isOpenModal} onHide={this.onSendEmail} bsSize="large">

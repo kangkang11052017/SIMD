@@ -3,8 +3,10 @@ import { URL } from '../../constants';
 
 const services = {
   fetchUsers: () => {
-    console.log('URL', URL.USERS);
     return Api.get(URL.USERS);
+  },
+  signUp: () => {
+    return Api.post(URL.USERS);
   },
 };
 

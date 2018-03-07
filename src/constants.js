@@ -4,7 +4,7 @@ import { map, range } from 'lodash';
 export const URL = {
   HOME: '/',
   LANDING: '/landingpage',
-  HOST: 'localhost:9090/api/',
+  HOST: 'http://138.68.145.116:9090/api/',
   USERS: 'user',
   MAIL: 'sendMail',
 };
