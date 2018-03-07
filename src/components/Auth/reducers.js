@@ -1,8 +1,8 @@
 import { fromJS } from 'immutable';
-import { FETCH_USERS, SIGN_UP } from './actionTypes';
+import { FETCH_USERS, SIGN_UP, LOGIN } from './actionTypes';
 
 const initState = fromJS({
-  users: fromJS([]),
+  users: [],
   isLoading: false,
   isLoaded: false,
   error: null,
@@ -47,6 +47,11 @@ const users = (state = initState, action) => {
       .set('isLoading', false)
       .set('idSucceed', false)
       .set('error', fromJS(action.payload));
+
+  case LOGIN:
+    return state
+      .set('name', action.payload.name)
+      .set('password', action.payload.password);
 
   default: return state;
   }

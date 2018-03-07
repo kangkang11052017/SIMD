@@ -1,6 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { Button, Form, FormGroup, Col, ControlLabel } from 'react-bootstrap';
-import { func, bool, object, array } from 'prop-types';
+import { func, bool, object } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import { withRouter } from 'react-router';
@@ -15,7 +15,6 @@ class LoginForm extends PureComponent {
     handleSubmit: func.isRequired,
     logged: bool.isRequired,
     history: object.isRequired,
-    users: array.isRequired,
     dispatchFetchUsers: func.isRequired,
   }
 
@@ -30,8 +29,7 @@ class LoginForm extends PureComponent {
   }
 
   render() {
-    const { handleSubmit, onLogin, users } = this.props;
-    console.log('users', users);
+    const { handleSubmit, onLogin } = this.props;
     return (
       <Fragment>
         <Form horizontal>
@@ -61,7 +59,6 @@ class LoginForm extends PureComponent {
               />
             </Col>
           </FormGroup>
-          {/* <Checkbox>Remember me?</Checkbox> */}
           <Button onClick={handleSubmit(onLogin)}>Login</Button>
         </Form>
       </Fragment>
@@ -70,9 +67,7 @@ class LoginForm extends PureComponent {
 }
 
 const mapStateToProps = (state) => {
-  console.log('state', state);
   return {
-    users: state.users.get('users'),
     isLoading: state.users.get('isLoading'),
   };
 };

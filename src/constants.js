@@ -4,7 +4,8 @@ import { map, range } from 'lodash';
 export const URL = {
   HOME: '/',
   LANDING: '/landingpage',
-  HOST: 'http://simed6-trieste.7e14.starter-us-west-2.openshiftapps.com/spring-mvc-angularjs/api/',
+  HOST: 'http://simed7-trieste.7e14.starter-us-west-2.openshiftapps.com/spring-mvc-angularjs/api/',
+  // HOST: 'http://localhost:9090/api/',
   USERS: 'user',
   MAIL: 'sendMail',
 };

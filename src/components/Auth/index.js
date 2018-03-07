@@ -15,6 +15,7 @@ class Authentication extends PureComponent {
   static propTypes = {
     dispatchFetchUsers: func.isRequired,
     users: array.isRequired,
+    dispatchSignUp: func.isRequired,
   };
 
   constructor(props) {
@@ -48,8 +49,10 @@ class Authentication extends PureComponent {
   }
 
   onSignUpRequest = (values) => {
+    const { dispatchSignUp } = this.props;
     this.writeOnDB(values);
-    const { userName, password } = values;
+    const { userName, password, email = '' } = values;
+    dispatchSignUp({ name: userName, email, password });
     this.setState((prevState) => {
       return {
         ...prevState,
@@ -77,23 +80,26 @@ class Authentication extends PureComponent {
     });
   }
 
-  validateUser = (name, pass) => {
-    const { userName, password } = this.state.user;
+  validateUser = (userName, pass) => {
+    const { users } = this.props;
     const validUser = {
       error: '',
       registered: false,
       loginSucceed: false,
     };
-    if (userName && userName.includes(name)) {
-      if (password && !password.includes(pass)) {
-        validUser.error = 'User name and password mismatch';
+    map(users, (user) => {
+      const { name, password } = user;
+      if (name && name.includes(userName)) {
+        if (password && !password.includes(pass)) {
+          validUser.error = 'User name and password mismatch';
+        } else {
+          validUser.registered = true;
+          validUser.loginSucceed = true;
+        }
       } else {
-        validUser.registered = true;
-        validUser.loginSucceed = true;
+        validUser.error = 'User name not found!';
       }
-    } else {
-      validUser.error = 'User name not found!';
-    }
+    });
     return validUser;
   }
 
@@ -145,7 +151,7 @@ class Authentication extends PureComponent {
 
 const mapStateToProps = (state) => {
   return {
-    users: state.users.get('users'),
+    users: state.users.get('users').toJS(),
   };
 };
 
@@ -156,7 +162,7 @@ const mapDispatchToProps = (dispatch) => {
     },
     dispatchSignUp: (user) => {
       dispatch(signUp.start(user));
-    }
+    },
   };
 };
 

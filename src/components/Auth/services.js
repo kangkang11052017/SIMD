@@ -5,8 +5,8 @@ const services = {
   fetchUsers: () => {
     return Api.get(URL.USERS);
   },
-  signUp: () => {
-    return Api.post(URL.USERS);
+  signUp: (user) => {
+    return Api.post(URL.USERS, user);
   },
 };
 
