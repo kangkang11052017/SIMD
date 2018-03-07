@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { bool, func } from 'prop-types';
-import { reduxForm, Field } from 'redux-form/immutable';
+import { reduxForm, Field, reset } from 'redux-form/immutable';
 import { connect } from 'react-redux';
 import { Modal, FormGroup, ControlLabel, Button, Col } from 'react-bootstrap';
 import { compose } from 'recompose';
@@ -38,6 +38,7 @@ class Email extends PureComponent {
         isOpenModal: false,
       };
     });
+    reset('EMAIL');
   }
 
   render() {

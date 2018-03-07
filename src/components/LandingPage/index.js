@@ -141,7 +141,6 @@ class LandingPage extends Component {
 
   onSendMail = (values) => {
     const { dispatchSendMail } = this.props;
-    console.log('avalues', values);
     dispatchSendMail(values);
     this.emailSent();
   }
