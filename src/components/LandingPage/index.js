@@ -10,6 +10,9 @@ import uuid from 'uuid';
 import Email from '../Email';
 import Styles from './LandingPage.css';
 import reducers from './reducers';
+import mailReducers from './sendMailReducers';
+import effects from './effects';
+import { sendMail } from './actions';
 import { actions } from '../../store/reducers';
 import { URL, CHART } from '../../constants';
 
@@ -22,6 +25,7 @@ class LandingPage extends Component {
     setRoomConfig: func.isRequired,
     setTempObj: func.isRequired,
     history: object.isRequired,
+    dispatchSendMail: func.isRequired,
   }
 
   static defaultProps = {
@@ -126,7 +130,7 @@ class LandingPage extends Component {
     this.props.setTempObj(temperatureObj);
   }
 
-  onSendEmail = () => {
+  onOpenMail = () => {
     this.setState((prevState) => {
       return {
         ...prevState,
@@ -135,9 +139,15 @@ class LandingPage extends Component {
     });
   }
 
+  onSendMail = (values) => {
+    const { dispatchSendMail } = this.props;
+    console.log('avalues', values);
+    dispatchSendMail(values);
+    this.emailSent();
+  }
+
   onLogOut = () => {
-    console.log('this.prop', this.props);
-    this.props.history.push(URL.HOME)
+    this.props.history.push(URL.HOME);
   }
 
   emailSent = () => {
@@ -149,10 +159,8 @@ class LandingPage extends Component {
     });
   }
 
-
   render() {
     const { chartData } = this.props;
-    console.log('this.state in landing page', this.state);
     const collections = map(chartData, (data) => {
       return {
         labels: range(0, data.Actual.length),
@@ -171,7 +179,7 @@ class LandingPage extends Component {
 
     return (
       <div>
-        <Email isOpen={this.state.email} onClose={this.emailSent} />
+        <Email isOpen={this.state.email} onClose={this.emailSent} onSend={this.onSendMail} />
         <Navbar>
           <Navbar.Header>
             <Navbar.Brand>
@@ -183,7 +191,7 @@ class LandingPage extends Component {
               <Button onClick={this.onLogOut}>Log out</Button>
             </NavItem>
             <NavItem>
-              <Button onClick={this.onSendEmail}>Send email</Button>
+              <Button onClick={this.onOpenMail}>Send email</Button>
             </NavItem>
           </Nav>
         </Navbar>
@@ -240,8 +248,11 @@ const mapDispatchToProps = (dispatch) => {
     setTempObj: (obj) => {
       dispatch(actions.setTempObj(obj));
     },
+    dispatchSendMail: (email) => {
+      dispatch(sendMail.start(email));
+    },
   };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(LandingPage));
-export { reducers };
+export { reducers, mailReducers, effects };

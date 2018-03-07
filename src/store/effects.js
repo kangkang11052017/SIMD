@@ -1,10 +1,10 @@
 import { combineEpics } from 'redux-observable';
-import { effects as emailEpics } from '../components/Email';
 import { effects as authEpics } from '../components/Auth';
+import { effects as sendMailEpics } from '../components/LandingPage';
 
 const rootEpic = combineEpics(
-  ...emailEpics,
   ...authEpics,
+  ...sendMailEpics,
 );
 
 export default rootEpic;

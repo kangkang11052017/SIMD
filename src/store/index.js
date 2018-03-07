@@ -6,7 +6,7 @@ import {
 import { createEpicMiddleware } from 'redux-observable';
 import { reducer as formReducer } from 'redux-form';
 import reducers from './reducers';
-import { reducers as landingPageReducers } from '../components/LandingPage';
+import { reducers as landingPageReducers, mailReducers } from '../components/LandingPage';
 import { reducers as authReducers } from '../components/Auth';
 import rootEpic from './effects';
 
@@ -15,6 +15,7 @@ const rootReducers = combineReducers({
   ...reducers,
   ...landingPageReducers,
   ...authReducers,
+  ...mailReducers,
 });
 
 const createStore = (initState) => {
