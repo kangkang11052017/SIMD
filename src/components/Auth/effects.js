@@ -9,9 +9,11 @@ const fetchUsersEpic = (action$) => {
       return services
         .fetchUsers()
         .flatMap((response) => {
+          console.log('response', response);
           return Observable.of(fetchUsers.success(response));
         })
         .catch((error) => {
+          console.log('errror', error);
           return Observable.of(fetchUsers.error(error));
         });
     });

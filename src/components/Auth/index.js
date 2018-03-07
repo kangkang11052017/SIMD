@@ -1,13 +1,22 @@
 import React, { PureComponent } from 'react';
 import { map } from 'lodash';
+import { func, array } from 'prop-types';
 import { Button } from 'react-bootstrap';
+import { compose } from 'recompose';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
+import { fetchUsers, signUp } from './actions';
 import reducers from './reducers';
 import effects from './effects';
 
 class Authentication extends PureComponent {
+  static propTypes = {
+    dispatchFetchUsers: func.isRequired,
+    users: array.isRequired,
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -18,6 +27,8 @@ class Authentication extends PureComponent {
   }
 
   componentWillMount() {
+    const { dispatchFetchUsers } = this.props;
+    dispatchFetchUsers();
     const { userName, password } = this.onGetUserInfo();
     this.setState((prevState) => {
       return {
@@ -108,13 +119,14 @@ class Authentication extends PureComponent {
     const {
       signup, registered, loginSucceed, error,
     } = this.state;
+    const { users } = this.props;
     return (
       <div className="App">
         <h2>Welcome to Simedtrieste</h2>
         {
           signup === true ?
-            <SignUpForm onSignUp={this.onSignUpRequest} /> :
-            <LoginForm onLogin={this.onLoginRequest} logged={loginSucceed} />
+            <SignUpForm users={users} onSignUp={this.onSignUpRequest} /> :
+            <LoginForm users={users} onLogin={this.onLoginRequest} logged={loginSucceed} />
         }
         {
           !signup && !registered && !loginSucceed &&
@@ -131,5 +143,27 @@ class Authentication extends PureComponent {
   }
 }
 
-export default withRouter(Authentication);
+const mapStateToProps = (state) => {
+  return {
+    users: state.users.get('users'),
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    dispatchFetchUsers: () => {
+      dispatch(fetchUsers.start());
+    },
+    dispatchSignUp: (user) => {
+      dispatch(signUp.start(user));
+    }
+  };
+};
+
+const enhancers = [
+  connect(mapStateToProps, mapDispatchToProps),
+  withRouter,
+];
+
+export default compose(...enhancers)(Authentication);
 export { reducers, effects };

@@ -18,12 +18,10 @@ const handleSuccessResponse = (resp) => {
         if (resp && resp.ok) {
           resolve(payload);
         } else {
-          // eslint-disable-next-line
           reject({ status: resp.status, error: payload });
         }
       })
       .catch((error) => {
-        // eslint-disable-next-line
         reject({ status: resp.status, error });
       });
   });

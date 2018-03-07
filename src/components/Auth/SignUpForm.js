@@ -2,7 +2,6 @@ import React, { PureComponent, Fragment } from 'react';
 import { func } from 'prop-types';
 import { Button, Form, FormGroup, Col, ControlLabel } from 'react-bootstrap';
 import { noop } from 'lodash';
-import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import InputField from './InputField';
 
@@ -58,20 +57,17 @@ class SignUpForm extends PureComponent {
             </Col>
           </FormGroup>
         </Form>
-        <Button onClick={handleSubmit(onSignUp)}>Sign Up</Button>
+        <FormGroup controlId="simedtriesteSubmitBtn">
+          <Col smOffset={2} sm={2}>
+            <Button onClick={handleSubmit(onSignUp)}>Sign Up</Button>
+          </Col>
+          <Button bsStyle="danger" onClick={handleSubmit(onSignUp)}>Cancel</Button>
+        </FormGroup>
       </Fragment>
     );
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    dispatchSubmitUser: () => {
-      dispatch(noop);
-    },
-  };
-};
-
-export default connect(null, mapDispatchToProps)(reduxForm({
+export default reduxForm({
   form: 'SIGN_UP',
-})(SignUpForm));
+})(SignUpForm);
