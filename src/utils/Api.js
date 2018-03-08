@@ -15,7 +15,6 @@ const handleSuccessResponse = (resp) => {
   return new Promise((resolve, reject) => {
     resp.json()
       .then((payload) => {
-        console.log('payload', payload);
         if (resp && resp.ok) {
           resolve(payload);
         } else {

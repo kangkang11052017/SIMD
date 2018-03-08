@@ -58,9 +58,7 @@ class SignUpForm extends PureComponent {
           </FormGroup>
         </Form>
         <FormGroup controlId="simedtriesteSubmitBtn">
-          <Col smOffset={2} sm={2}>
-            <Button onClick={handleSubmit(onSignUp)}>Sign Up</Button>
-          </Col>
+          <Button onClick={handleSubmit(onSignUp)}>Sign Up</Button>
           <Button bsStyle="danger" onClick={handleSubmit(onSignUp)}>Cancel</Button>
         </FormGroup>
       </Fragment>

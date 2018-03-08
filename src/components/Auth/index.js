@@ -151,7 +151,7 @@ class Authentication extends PureComponent {
 
 const mapStateToProps = (state) => {
   return {
-    users: state.users.get('users').toJS(),
+    users: state.usersReducers.get('users').toJS(),
   };
 };
 

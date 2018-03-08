@@ -2,14 +2,14 @@ import { fromJS } from 'immutable';
 import { FETCH_USERS, SIGN_UP, LOGIN } from './actionTypes';
 
 const initState = fromJS({
-  users: [],
+  users: fromJS([]),
   isLoading: false,
   isLoaded: false,
   error: null,
   isSucceed: false,
 });
 
-const users = (state = initState, action) => {
+const usersReducers = (state = initState, action) => {
   switch (action.type) {
   case FETCH_USERS.START:
     return state
@@ -57,4 +57,4 @@ const users = (state = initState, action) => {
   }
 };
 
-export default { users };
+export default { usersReducers };
