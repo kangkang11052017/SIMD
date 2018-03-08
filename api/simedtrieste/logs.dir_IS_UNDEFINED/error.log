@@ -1,1 +1,0 @@
-2018-03-06 21:34:56.769 ERROR 13344 --- [http-nio-9090-exec-3] com.small.business.dao.user.UserDaoImpl  : addUser got error: PreparedStatementCallback; bad SQL grammar [INSERT INTO user (name, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)]; nested exception is java.sql.SQLException: No value specified for parameter 4
