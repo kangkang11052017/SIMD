@@ -1,0 +1,3 @@
+[submodule "api/simedtrieste"]
+	path = api/simedtrieste
+	url = https://github.com/vunguyenthe/simedtrieste.git
