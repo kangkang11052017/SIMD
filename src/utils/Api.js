@@ -7,12 +7,14 @@ const headers = {
   dataType: 'json',
   'X-Requested-With': 'XMLHttpRequest',
   'X-Mashape-Key': 'abc',
+  mode: 'cors',
 };
 
 const host = URL.HOST;
 
 const handleSuccessResponse = (resp) => {
   return new Promise((resolve, reject) => {
+    console.log('respone', resp);
     resp.json()
       .then((payload) => {
         if (resp && resp.ok) {
@@ -35,7 +37,12 @@ const handleErrorResponse = (error) => {
 
 const xhr = (route, params, verb, isGlobal) => {
   const url = isGlobal ? route : `${host}${route}`;
-  const options = Object.assign({ method: verb }, params ?
+  const options = Object.assign({
+    method: verb,
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': verb,
+  }, params ?
     { body: JSON.stringify(params) } : null);
   options.headers = headers;
   return Observable.fromPromise(fetch(url, options)

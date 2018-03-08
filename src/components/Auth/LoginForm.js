@@ -18,9 +18,11 @@ class LoginForm extends PureComponent {
     dispatchFetchUsers: func.isRequired,
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.props.dispatchFetchUsers();
   }
+  // componentDidMount() {
+  // }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.logged) {

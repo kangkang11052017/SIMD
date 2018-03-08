@@ -50,7 +50,6 @@ class Authentication extends PureComponent {
 
   onSignUpRequest = (values) => {
     const { dispatchSignUp } = this.props;
-    this.writeOnDB(values);
     const { userName, password, email = '' } = values;
     dispatchSignUp({ name: userName, email, password });
     this.setState((prevState) => {
@@ -58,10 +57,6 @@ class Authentication extends PureComponent {
         ...prevState,
         signup: false,
         registered: true,
-        user: {
-          userName,
-          password,
-        },
       };
     });
   }
