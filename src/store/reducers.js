@@ -11,7 +11,7 @@ const actions = createActions({
   [AUTH.SIGN_UP]: (user) => { return user; },
   [AUTH.LOGIN]: (user) => { return user; },
   [ACTION.SET_ROOM_CONFIG]: (config) => { return config; },
-  [ACTION.SET_TEMP_OBJ]: (obj) => { return obj; },
+  [ACTION.SET_TEMP_OBJ]: ({ tempObj, len }) => { return { tempObj, len }; },
   [ACTION.SET_CHART_DATA]: (data) => { return data; },
 });
 

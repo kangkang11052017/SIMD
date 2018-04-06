@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { object, func } from 'prop-types';
+import { object, func, number } from 'prop-types';
 import CSVReader from 'react-csv-reader';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
@@ -26,6 +26,7 @@ class LandingPage extends Component {
     setTempObj: func.isRequired,
     history: object.isRequired,
     dispatchSendMail: func.isRequired,
+    fileLength: number.isRequired,
   }
 
   static defaultProps = {
@@ -42,9 +43,11 @@ class LandingPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { chartData, roomConfig, temperatureObj } = nextProps;
+    const {
+      chartData, roomConfig, temperatureObj, fileLength,
+    } = nextProps;
     if ((!chartData && roomConfig && temperatureObj) ||
-      (chartData && this.props.temperatureObj.length !== temperatureObj.length)) {
+      (chartData && this.props.fileLength !== fileLength)) {
       const chartDataPlot = {};
       const chartDataSet = {};
       map(roomConfig, (rooms, month) => {
@@ -82,6 +85,10 @@ class LandingPage extends Component {
       });
       this.props.setChartData(chartDataPlot);
     }
+  }
+
+  shouldComponentUpdate() {
+    return true;
   }
 
   onConfigHandle = (rawData) => {
@@ -127,7 +134,8 @@ class LandingPage extends Component {
         }
       });
     });
-    this.props.setTempObj(temperatureObj);
+    const dataLen = temperatureData.length;
+    this.props.setTempObj({ tempObj: temperatureObj, len: dataLen });
   }
 
   onOpenMail = () => {
@@ -233,6 +241,7 @@ const mapStateToProps = (state) => {
     chartData: state.chartReducers.get('chartData'),
     roomConfig: state.chartReducers.get('roomConfig'),
     temperatureObj: state.chartReducers.get('temperatureObj'),
+    fileLength: state.chartReducers.get('fileLength'),
   };
 };
 
